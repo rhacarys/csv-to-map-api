@@ -76,7 +76,10 @@ class FileController {
           .on('end', () => {
             console.log('CSV file processed');
           });
+      }).on('error', e => {
+        console.log('CSV URL', e);
       });
+
     } catch (error) {
       console.log(error);
     }
