@@ -34,7 +34,7 @@ class FileController {
     }
 
     try {
-      var createdFile = await FileService.addFile(newFile); 
+      var createdFile = await FileService.addFile(newFile);
       util.setSuccess(201, 'File Added!', createdFile);
     } catch (error) {
       util.setError(400, error.message);
@@ -61,17 +61,20 @@ class FileController {
                 }
 
                 console.log(point);
-                try {
-                  PointService.addPoint(point);
-                } catch (error) {
-                  console.log(error);
-                }
+                
+                (async () => {
+                  try {
+                    PointService.addPoint(point);
+                  } catch (error) {
+                    console.log(error);
+                  }
+                })();
 
               }
             } catch (e) { }
           })
           .on('end', () => {
-            console.log('CSV file successfully processed');
+            console.log('CSV file processed');
           });
       });
     } catch (error) {
@@ -80,27 +83,6 @@ class FileController {
 
     return util.send(res);
   
-  }
-
-  static async updatedFile(req, res) {
-    const alteredFile = req.body;
-    const { id } = req.params;
-    if (!Number(id)) {
-      util.setError(400, 'Please input a valid numeric value.');
-      return util.send(res);
-    }
-    try {
-      const updateFile = await FileService.updateFile(id, alteredFile);
-      if (!updateFile) {
-        util.setError(404, `Cannot find File with the id: ${id}.`);
-      } else {
-        util.setSuccess(200, 'File updated.', updateFile);
-      }
-      return util.send(res);
-    } catch (error) {
-      util.setError(404, error);
-      return util.send(res);
-    }
   }
 
   static async getAFile(req, res) {

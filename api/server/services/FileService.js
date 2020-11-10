@@ -17,27 +17,11 @@ class FileService {
     }
   }
 
-  static async updateFile(id, updateFile) {
-    try {
-      const FileToUpdate = await database.File.findOne({
-        where: { id: Number(id) }
-      });
-
-      if (FileToUpdate) {
-        await database.File.update(updateFile, { where: { id: Number(id) } });
-
-        return updateFile;
-      }
-      return null;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   static async getAFile(id) {
     try {
       const theFile = await database.File.findOne({
-        where: { id: Number(id) }
+        where: { id: Number(id) },
+        include: { model: database.Point, as: 'points' }
       });
 
       return theFile;

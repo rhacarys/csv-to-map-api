@@ -9,6 +9,8 @@ export default (sequelize, DataTypes) => {
   File.associate = (models) => {
     File.hasMany(models.Point, {
       as: 'points',
+      onDelete: 'cascade',
+      hooks: true
     });
   };
 
