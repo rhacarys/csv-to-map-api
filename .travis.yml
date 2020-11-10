@@ -8,14 +8,20 @@ install:
   - npm install
 services:
   - postgresql
+addons:
+  postgresql: 13
+  apt:
+    packages:
+      - postgresql-13-postgis-3.0.2
 
 env:
   global:
     - NODE_ENV=test
 
 before_script:
-  - psql -c 'create database cyan_test;' -U postgres
-  - psql -c "CREATE USER cyan WITH PASSWORD cyan;" -U postgres
+  - psql -c "create database cyan_test" -U postgres
+  - psql -c "use cyan_test" -U postgres
+  - psql -c "create extension postgis" -U postgres
   - npm run build
   - npm install -g sequelize-cli
   - sequelize db:migrate
