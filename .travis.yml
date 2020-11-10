@@ -19,8 +19,7 @@ env:
 
 before_script:
   - psql -c "create database cyan_test" -U postgres
-  - psql -c "use cyan_test" -U postgres
-  - psql -c "create extension postgis" -U postgres
+  - psql -c "create extension postgis" -d cyan_test -U postgres
   - npm run build
   - npm install -g sequelize-cli
   - sequelize db:migrate
