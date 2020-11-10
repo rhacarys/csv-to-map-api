@@ -18,8 +18,8 @@ module.exports = {
 
   test: {
     database: 'cyan_test',
-    username: 'postgres',
-    password: 'admin',
+    username: 'cyan',
+    password: 'cyan',
     host: '127.0.0.1',
     dialect: 'postgres'
   },
