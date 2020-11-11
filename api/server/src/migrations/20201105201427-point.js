@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      coordinates: {
+      geom: {
         type: Sequelize.GEOMETRY('POINT'),
         allowNull: false,
       },

@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
   const Point = sequelize.define('Point', {
-    coordinates: {
+    geom: {
       type: DataTypes.GEOMETRY,
       allowNull: false,
     },

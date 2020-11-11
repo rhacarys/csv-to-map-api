@@ -9,9 +9,9 @@ class PointService {
     }
   }
 
-  static async addPoint(newPoint) {
+  static async addPoint(newPoint, options={}) {
     try {
-      return await database.Point.create(newPoint);
+      return await database.Point.create(newPoint, options);
     } catch (error) {
       throw error;
     }

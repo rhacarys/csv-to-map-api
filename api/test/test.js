@@ -7,9 +7,22 @@ chai.use(chatHttp);
 const { expect } = chai;
 
 describe('Testing the file endpoints:', () => {
-  it('It should create a file', (done) => {
+
+  it('It should get no Files', (done) => {
+    chai.request(app)
+      .get('/api/v1/files')
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        res.body.should.have.property('message')
+                            .eql('No File found.');
+        done();
+      });
+  });
+
+  it('It should create a File with valid CSV url', (done) => {
     const data = {
-      url: 'fake.url.com'
+      url: 'rhacarys.github.io/pontos.csv'
     };
     chai.request(app)
       .post('/api/v1/files')
@@ -21,11 +34,14 @@ describe('Testing the file endpoints:', () => {
           id: 1,
           filename: data.url
         });
+        res.body.data.should.have.property('points');
+        expect(res.body.data.points).to.be.an('array');
+        expect(res.body.data.points).to.have.length(4);
         done();
       });
   });
 
-  it('It should not create a file without url parameter', (done) => {
+  it('It should not create a File without url parameter', (done) => {
     const data = { };
     chai.request(app)
       .post('/api/v1/files')
@@ -37,7 +53,7 @@ describe('Testing the file endpoints:', () => {
       });
   });
 
-  it('It should not create a file with empty url', (done) => {
+  it('It should not create a File with empty url', (done) => {
     const data = {
       url: ''
     };
@@ -51,19 +67,50 @@ describe('Testing the file endpoints:', () => {
       });
   });
 
-  it('It should get all files', (done) => {
+  it('It should not create a File with unreachable url', (done) => {
+    const data = {
+      url: 'any.fake.url'
+    };
+    chai.request(app)
+      .post('/api/v1/files')
+      .set('Accept', 'application/json')
+      .send(data)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+  });
+
+  it('It should not create a File with invalid url', (done) => {
+    const data = {
+      url: 'rhacarys.github.io/undefined'
+    };
+    chai.request(app)
+      .post('/api/v1/files')
+      .set('Accept', 'application/json')
+      .send(data)
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+  });
+
+  it('It should get all Files', (done) => {
     chai.request(app)
       .get('/api/v1/files')
       .set('Accept', 'application/json')
       .end((err, res) => {
         expect(res.status).to.equal(200);
+        expect(res.body.data).to.be.an('array');
+        expect(res.body.data).to.have.length(1);
         res.body.data[0].should.have.property('id');
         res.body.data[0].should.have.property('filename');
+        res.body.data[0].should.not.have.property('points');
         done();
       });
   });
 
-  it('It should get a particular file', (done) => {
+  it('It should get a particular File', (done) => {
     const fileId = 1;
     chai.request(app)
       .get(`/api/v1/files/${fileId}`)
@@ -73,11 +120,13 @@ describe('Testing the file endpoints:', () => {
         res.body.data.should.have.property('id');
         res.body.data.should.have.property('filename');
         res.body.data.should.have.property('points');
+        expect(res.body.data.points).to.be.an('array');
+        expect(res.body.data.points).to.have.length(4);
         done();
       });
   });
 
-  it('It should not get a particular file with invalid id', (done) => {
+  it('It should not get a particular File with invalid id', (done) => {
     const fileId = 8888;
     chai.request(app)
       .get(`/api/v1/files/${fileId}`)
@@ -90,7 +139,7 @@ describe('Testing the file endpoints:', () => {
       });
   });
 
-  it('It should not get a particular file with non-numeric id', (done) => {
+  it('It should not get a particular File with non-numeric id', (done) => {
     const fileId = 'aaa';
     chai.request(app)
       .get(`/api/v1/files/${fileId}`)
@@ -103,7 +152,7 @@ describe('Testing the file endpoints:', () => {
       });
   });
 
-  it('It should delete a file', (done) => {
+  it('It should delete a File', (done) => {
     const fileId = 1;
     chai.request(app)
       .delete(`/api/v1/files/${fileId}`)
@@ -115,7 +164,7 @@ describe('Testing the file endpoints:', () => {
       });
   });
 
-  it('It should not delete a file with invalid id', (done) => {
+  it('It should not delete a File with invalid id', (done) => {
     const fileId = 777;
     chai.request(app)
       .delete(`/api/v1/files/${fileId}`)
@@ -128,7 +177,7 @@ describe('Testing the file endpoints:', () => {
       });
   });
 
-  it('It should not delete a file with non-numeric id', (done) => {
+  it('It should not delete a File with non-numeric id', (done) => {
     const fileId = 'bbb';
     chai.request(app)
       .delete(`/api/v1/files/${fileId}`)

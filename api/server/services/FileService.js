@@ -11,7 +11,9 @@ class FileService {
 
   static async addFile(newFile) {
     try {
-      return await database.File.create(newFile);
+      return await database.File.create(newFile, { 
+        include: { model: database.Point, as: 'points' }
+      });
     } catch (error) {
       throw error;
     }
