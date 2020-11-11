@@ -19,7 +19,7 @@ module.exports = {
   test: {
     database: 'cyan_test',
     username: 'postgres',
-    password: null,
+    password: 'admin',
     host: '127.0.0.1',
     dialect: 'postgres'
   },
