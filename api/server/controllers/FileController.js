@@ -22,7 +22,6 @@ class FileController {
   }
 
   static async addFile(req, res) {
-    console.log(req.body);
     if (!req.body.url) {
       util.setError(400, "Please provide complete details.");
       return util.send(res);
@@ -56,7 +55,6 @@ class FileController {
                   }
                 }
               } else {
-                console.log(err);
                 reject(
                   new Error(
                     `The inserted file could not be processed: ${err.message}`
@@ -65,7 +63,6 @@ class FileController {
                 return;
               }
 
-              console.log("CSV file processed");
               resolve();
             });
 
@@ -95,7 +92,6 @@ class FileController {
     };
 
     try {
-      console.log(`Retrieving file on ${url}`);
       await retrieveCSV(url, newFile);
 
       var createdFile = await FileService.addFile(newFile);
