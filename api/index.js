@@ -9,15 +9,11 @@ import FileRoutes from "./server/routes/FileRoutes";
 config.config();
 
 const app = express();
+const apiDocs = "/api/v1/api-docs";
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-/**
- * Route to Swagger API documentation.
- */
-app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
 
 /**
  * Route to handle all the File operations.
@@ -25,13 +21,14 @@ app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
 app.use("/api/v1/files", FileRoutes);
 
 /**
- * when a random route is inputed
+ * Route to Swagger API documentation.
  */
-app.get("*", (req, res) =>
-  res.status(404).send({
-    message: "Not Found.",
-  })
-);
+app.use(apiDocs, swaggerUi.serve, swaggerUi.setup(swagger));
+
+/**
+ * When a random route is inputed, redirect to the current API documentation.
+ */
+app.get("*", (req, res) => res.redirect(apiDocs));
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

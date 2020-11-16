@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "info": {
     "version": "1.0.0",
-    "title": "CSV to Map API",
-    "description": "Cyan Mid-Level Challenge",
+    "title": "Cyan Mid-Level Challenge - CSV to Map API",
+    "description": "Stores aggregated Cartesian points in a Postgres database with PostGIS extension.",
     "contact": {
       "name": "Nathaniel Lacerda",
       "email": "nathaniel.lacerda@gmail.com",
@@ -16,12 +16,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000/api/v1/",
-      "description": "Local server"
-    },
-    {
       "url": "https://csv-to-map-api.herokuapp.com/api/v1/",
       "description": "Production server"
+    },
+    {
+      "url": "http://localhost:8000/api/v1/",
+      "description": "Development server"
     }
   ],
   "tags": [
@@ -33,7 +33,7 @@
     "/files": {
       "get": {
         "tags": ["CRUD operations"],
-        "description": "Get all files",
+        "description": "Return all files lazily, ie, without their Points array.",
         "operationId": "getFiles",
         "parameters": [],
         "responses": {
@@ -51,7 +51,7 @@
       },
       "post": {
         "tags": ["CRUD operations"],
-        "description": "Create a file",
+        "description": "Read a CSV file from the given URL and stores the data. Please provide a file containing a single point per line, with the latitude and longitude, respectively, separated per coma.",
         "operationId": "createAFile",
         "parameters": [],
         "requestBody": {
@@ -95,7 +95,7 @@
     "/files/{fileId}": {
       "get": {
         "tags": ["CRUD operations"],
-        "description": "Get a particular file",
+        "description": "Return a particular file filled with its Points array.",
         "operationId": "getAFile",
         "parameters": [
           {
@@ -132,7 +132,7 @@
       },
       "delete": {
         "tags": ["CRUD operations"],
-        "description": "Delete a particular file",
+        "description": "Delete a particular file and all its associated Points.",
         "operationId": "deleteAFile",
         "parameters": [
           {
