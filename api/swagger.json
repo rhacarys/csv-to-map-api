@@ -20,11 +20,7 @@
       "description": "Local server"
     },
     {
-      "url": "https://localhost:8000/api/v1/",
-      "description": "Testing server"
-    },
-    {
-      "url": "https://localhost:8000/api/v1/",
+      "url": "https://csv-to-map-api.herokuapp.com/api/v1/",
       "description": "Production server"
     }
   ],
