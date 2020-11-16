@@ -1,7 +1,7 @@
-import https from 'https';
-import parse from 'csv-parse';
-import FileService from '../services/FileService';
-import Util from '../utils/Utils';
+import https from "https";
+import parse from "csv-parse";
+import FileService from "../services/FileService";
+import Util from "../utils/Utils";
 
 const util = new Util();
 
@@ -10,9 +10,9 @@ class FileController {
     try {
       const allFiles = await FileService.getAllFiles();
       if (allFiles.length > 0) {
-        util.setSuccess(200, 'Files retrieved.', allFiles);
+        util.setSuccess(200, "Files retrieved.", allFiles);
       } else {
-        util.setSuccess(200, 'No File found.');
+        util.setSuccess(200, "No File found.");
       }
       return util.send(res);
     } catch (error) {
@@ -22,52 +22,65 @@ class FileController {
   }
 
   static async addFile(req, res) {
+    console.log(req.body);
     if (!req.body.url) {
-      util.setError(400, 'Please provide complete details.');
+      util.setError(400, "Please provide complete details.");
       return util.send(res);
     }
-  
+
     async function retrieveCSV(url, file) {
       return new Promise((resolve, reject) => {
-
-        const request = https.get(`https://${url}`, response => {
+        const request = https.get(`https://${url}`, (response) => {
           if (response.statusCode !== 200) {
-            reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
+            reject(
+              new Error(`Failed to get '${url}' (${response.statusCode})`)
+            );
             return;
           }
 
-          try{
-            const parser = parse( (err, records) => {
-              for (const row of records) {
-                const lat = parseFloat(row[0]);
-                const lon = parseFloat(row[1]);
+          try {
+            const parser = parse((err, records) => {
+              if (records) {
+                for (const row of records) {
+                  const lat = parseFloat(row[0]);
+                  const lon = parseFloat(row[1]);
 
-                if (lat && lon) {
-                  const point = {
-                    geom: {
-                      type: 'Point', coordinates: [lon, lat]
-                    }
+                  if (lat && lon) {
+                    const point = {
+                      geom: {
+                        type: "Point",
+                        coordinates: [lon, lat],
+                      },
+                    };
+                    file.points.push(point);
                   }
-                  file.points.push(point);
                 }
+              } else {
+                console.log(err);
+                reject(
+                  new Error(
+                    `The inserted file could not be processed: ${err.message}`
+                  )
+                );
+                return;
               }
 
-              console.log('CSV file processed');
+              console.log("CSV file processed");
               resolve();
             });
 
             response.pipe(parser);
-
           } catch (err) {
             reject(err);
+            return;
           }
-          
-          response.on('error', () => {
+
+          response.on("error", () => {
             reject(err);
           });
         });
 
-        request.on('error', err => {
+        request.on("error", (err) => {
           reject(err);
         });
 
@@ -78,17 +91,16 @@ class FileController {
     const url = req.body.url;
     const newFile = {
       filename: url,
-      points: []
-    }
+      points: [],
+    };
 
     try {
       console.log(`Retrieving file on ${url}`);
       await retrieveCSV(url, newFile);
 
       var createdFile = await FileService.addFile(newFile);
-      util.setSuccess(201, 'File Added!', createdFile);
+      util.setSuccess(201, "File Added!", createdFile);
       return util.send(res);
-
     } catch (error) {
       util.setError(400, error.message);
       return util.send(res);
@@ -99,7 +111,7 @@ class FileController {
     const { id } = req.params;
 
     if (!Number(id)) {
-      util.setError(400, 'Please input a valid numeric value.');
+      util.setError(400, "Please input a valid numeric value.");
       return util.send(res);
     }
 
@@ -109,7 +121,7 @@ class FileController {
       if (!theFile) {
         util.setError(404, `Cannot find File with the id ${id}.`);
       } else {
-        util.setSuccess(200, 'Found File.', theFile);
+        util.setSuccess(200, "Found File.", theFile);
       }
       return util.send(res);
     } catch (error) {
@@ -122,7 +134,7 @@ class FileController {
     const { id } = req.params;
 
     if (!Number(id)) {
-      util.setError(400, 'Please provide a numeric value.');
+      util.setError(400, "Please provide a numeric value.");
       return util.send(res);
     }
 
@@ -130,7 +142,7 @@ class FileController {
       const FileToDelete = await FileService.deleteFile(id);
 
       if (FileToDelete) {
-        util.setSuccess(200, 'File deleted.');
+        util.setSuccess(200, "File deleted.");
       } else {
         util.setError(404, `File with the id ${id} cannot be found.`);
       }

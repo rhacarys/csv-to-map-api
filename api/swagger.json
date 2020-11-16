@@ -1,0 +1,320 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "CSV to Map API",
+    "description": "Cyan Mid-Level Challenge",
+    "contact": {
+      "name": "Nathaniel Lacerda",
+      "email": "nathaniel.lacerda@gmail.com",
+      "url": "https://rhacarys.github.io/"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api/v1/",
+      "description": "Local server"
+    },
+    {
+      "url": "https://localhost:8000/api/v1/",
+      "description": "Testing server"
+    },
+    {
+      "url": "https://localhost:8000/api/v1/",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "CRUD operations"
+    }
+  ],
+  "paths": {
+    "/files": {
+      "get": {
+        "tags": ["CRUD operations"],
+        "description": "Get all files",
+        "operationId": "getFiles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Files were obtained",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Files"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["CRUD operations"],
+        "description": "Create a file",
+        "operationId": "createAFile",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "$ref": "#/components/schemas/filename"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File Added!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/{fileId}": {
+      "get": {
+        "tags": ["CRUD operations"],
+        "description": "Get a particular file",
+        "operationId": "getAFile",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Found File.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["CRUD operations"],
+        "description": "Delete a particular file",
+        "operationId": "deleteAFile",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Found deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "File deleted"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "id": {
+        "type": "integer",
+        "description": "Identification number",
+        "example": 1
+      },
+      "filename": {
+        "type": "string",
+        "description": "Address of the CSV file",
+        "example": "rhacarys.github.io/brasil.csv"
+      },
+      "createdAt": {
+        "type": "string",
+        "description": "Auto generated value of object cration time",
+        "example": "2020-11-14T13:10:33.200Z"
+      },
+      "updatedAt": {
+        "type": "string",
+        "description": "Auto generated value of object last update time",
+        "example": "2020-11-14T13:10:33.200Z"
+      },
+      "points": {
+        "type": "array",
+        "description": "The point geometries (latitude and longitude) read in the CSV file",
+        "items": {
+          "$ref": "#/components/schemas/Point"
+        }
+      },
+      "geom": {
+        "type": "object",
+        "description": "The geometry object to represent this point on a map",
+        "properties": {
+          "crs": {
+            "type": "object",
+            "description": "Coordinate Reference Systems options",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "name"
+              },
+              "properties": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The CRS reference",
+                    "example": "EPSG:4326"
+                  }
+                }
+              }
+            }
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of geometry. Value is always Point",
+            "example": "Point"
+          },
+          "coordinates": {
+            "type": "array",
+            "description": "Exactly two floating values to represent latitude and longitude, respectively",
+            "items": {
+              "type": "float",
+              "description": "Latitude or longitude",
+              "example": -11.21058
+            }
+          }
+        }
+      },
+      "File": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "filename": {
+            "$ref": "#/components/schemas/filename"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/createdAt"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/updatedAt"
+          },
+          "points": {
+            "$ref": "#/components/schemas/points"
+          }
+        }
+      },
+      "Files": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "$ref": "#/components/schemas/id"
+            },
+            "filename": {
+              "$ref": "#/components/schemas/filename"
+            },
+            "createdAt": {
+              "$ref": "#/components/schemas/createdAt"
+            },
+            "updatedAt": {
+              "$ref": "#/components/schemas/updatedAt"
+            }
+          }
+        }
+      },
+      "Point": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "geom": {
+            "$ref": "#/components/schemas/geom"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/createdAt"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/updatedAt"
+          },
+          "fileId": {
+            "$ref": "#/components/schemas/id"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
