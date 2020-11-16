@@ -14,7 +14,9 @@ const db = {};
 
 let sequelize;
 if (env === "production") {
-  sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_PINK_URL, config);
+  sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_PINK_URL, {
+    dialect: "postgres",
+  });
 } else {
   sequelize = new Sequelize(
     config.database,
