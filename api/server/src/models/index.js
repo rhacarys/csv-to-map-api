@@ -14,7 +14,7 @@ const db = {};
 
 let sequelize;
 if (env === "production") {
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
+  sequelize = new Sequelize(process.env[config.use_env_variable], {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "postgres",
