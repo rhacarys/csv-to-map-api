@@ -3,7 +3,7 @@
 API to stores aggregated Cartesian points in a Postgres database with PostGIS extension.\
 Visit [Github](https://github.com/rhacarys/csv-to-map-react) for the React App frontend.
 
-### The API is running on [Heroku](https://csv-to-map-api.herokuapp.com/) with documentation in [Swagger](https://csv-to-map-api.herokuapp.com/)
+### The API is running on [Heroku](https://csv-to-map-api.herokuapp.com/) with documentation in [Swagger](https://csv-to-map-api.herokuapp.com/api/v1/api-docs)
 
 ---
 
@@ -29,20 +29,16 @@ Installs all the dependences to run the api
 ### `sequelize db:migrate`
 
 Performs migrations in the database.\
-In the first run, the tables `File` and `Point` will be created in the database.
+In the first run, the tables `Files` and `Points` will be created in the database.
 
 ### `npm run dev`
 
 Runs the api in the development mode.\
 Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
 
-> Note that you will be automatically redirected to the swagger documentation page, on [http://localhost:8000/api/v1/api-docs](http://localhost:8000/api/v1/api-docs)
+> Note that you will be automatically redirected to the swagger documentation page, on [http://localhost:8000/api/v1/api-docs/](http://localhost:8000/api/v1/api-docs/)
 
-The API endpoints are now available on [http://localhost:8000/api/v1](http://localhost:8000/api/v1)
-
-The only available enpoint is:
-
-- `/files`
+The only API endpoint is now available on [http://localhost:8000/api/v1/file/](http://localhost:8000/api/v1/file/)
 
 ### `npm test`
 
