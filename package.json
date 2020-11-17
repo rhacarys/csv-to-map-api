@@ -1,7 +1,10 @@
 {
-  "name": "backend",
+  "name": "csv-to-map-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "API to store aggregated Cartesian points in a Postgres database with PostGIS extension.",
+  "author": "Nathaniel Lacerda",
+  "email": "nathaniel.lacerda@gmail.com",
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
     "start": "export NODE_ENV=production&&sequelize db:migrate&&node ./build/index.js",
@@ -9,9 +12,6 @@
     "test": "set NODE_ENV=test&&sequelize db:migrate:undo:all&&sequelize db:migrate&&nyc --require @babel/register mocha ./api/test/test.js --timeout 5000 --exit",
     "build": "rm -rf ./build && babel -d ./build ./api -s"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.12.5",
     "body-parser": "^1.19.0",

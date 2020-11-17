@@ -3,15 +3,15 @@
   "info": {
     "version": "1.0.0",
     "title": "Cyan Mid-Level Challenge - CSV to Map API",
-    "description": "Stores aggregated Cartesian points in a Postgres database with PostGIS extension.",
+    "description": "API to stores aggregated Cartesian points in a Postgres database with PostGIS extension.",
     "contact": {
       "name": "Nathaniel Lacerda",
       "email": "nathaniel.lacerda@gmail.com",
       "url": "https://rhacarys.github.io/"
     },
     "license": {
-      "name": "Apache 2.0",
-      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+      "name": "ISC",
+      "url": "https://opensource.org/licenses/ISC"
     }
   },
   "servers": [
